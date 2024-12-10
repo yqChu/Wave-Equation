@@ -50,9 +50,12 @@ classdef BaseWaveSolver < handle
             obj.u_prev = obj.u - obj.dt * du_dt(obj.x);
         end
         
-        function runSimulation(obj, output_file)
-            if nargin < 2
-                output_file = 'wave_animation.gif';
+        function runSimulation(obj, file_name)
+            if nargin < 2 || isempty(sprintf('%s.gif',file_name))
+                gif_file = 'wave_animation.gif';
+            end
+            if nargin < 3 || isempty(sprintf('%s.gif',file_name))
+                fig_file = 'final_frame.fig';
             end
             
             fig = figure;
@@ -68,7 +71,7 @@ classdef BaseWaveSolver < handle
             % 创建GIF动画的第一帧
             frame = getframe(fig);
             [A,map] = rgb2ind(frame2im(frame),256,'nodither');
-            imwrite(A,map,output_file,'GIF','LoopCount',Inf,'DelayTime',0.02);
+            imwrite(A,map,sprintf('%s.gif',file_name),'GIF','LoopCount',Inf,'DelayTime',0.02);
             
             % 循环迭代模拟
             for n = 1:obj.t_steps
@@ -80,17 +83,17 @@ classdef BaseWaveSolver < handle
                 drawnow;
                 frame = getframe(fig);
                 [A,map] = rgb2ind(frame2im(frame),256,'nodither');
-                imwrite(A,map,output_file,'GIF','WriteMode','append','DelayTime',0.02);
+                imwrite(A,map,sprintf('%s.gif',file_name),'GIF','WriteMode','append','DelayTime',0.02);
             end
             
-            % 将最后一帧保存为PNG图片
-            % 再次获取当前帧（此时是最后时刻）
-            frame = getframe(fig);
-            finalImage = frame2im(frame);
-            imwrite(finalImage, 'final_frame.png');
+            % 将最终图形保存为 .fig 格式
+            grid on
+            savefig(fig, sprintf('%s.fig', file_name));
             
             close(fig);
         end
+
+
 
     end
     
