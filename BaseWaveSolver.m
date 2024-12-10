@@ -63,7 +63,7 @@ classdef BaseWaveSolver < handle
             lineH = plot(ax, obj.x, obj.u, 'LineWidth', 2);
             ax.XLim = [0 obj.length];
             ax.YLim = [-1.1 1.1];
-            title(ax, '1D Wave Equation Simulation');
+            title(ax, sprintf('1D %s Equation Simulation', file_name));
             xlabel(ax, 'x');
             ylabel(ax, 'u(x,t)');
             timeText = text(ax, 0.05, 0.9, '', 'Units', 'normalized');
